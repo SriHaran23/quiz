@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous"></script>
+    <script src="quiz.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+        .bi-check-lg {
+            color: green;
+            font-size: 30px;
+            line-height: normal;
+        }
+
+        .bi-x {
+            color: red;
+            font-size: 35px;
+            line-height: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex justify-content-center">
+        <div class="w-50 border m-4">
+            <div class="bg-primary text-light fw-bolder p-3 d-flex justify-content-between align-items-center">
+                <h1>Quiz on Events</h1>
+                <h4 id="totalMarks"></h4>
+            </div>
+            <form id="form" onsubmit="submitform(event)" class="p-5 pt-2">
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var keys = {}
+        var marks = 0
+
+        questions.forEach((el, i) => {
+            var div = document.createElement("div")
+            var div1 = document.createElement("div")
+            var num = document.createElement("h5")
+            var qus = document.createElement("h5")
+            var p = document.createElement("p")
+            // var mark = document.createElement("b")
+
+            num.innerHTML = el.no + ")"
+            qus.innerHTML = el.ques
+            qus.id = "question" + el.no
+            // mark.classList.add('d-none', 'ms-auto', `mark${el.no}`, 'fw-normal')
+            div1.classList.add("d-flex", "gap-2")
+            div1.appendChild(num)
+            // qus.appendChild(mark)
+            div1.appendChild(qus)
+            div.appendChild(div1)
+            el.options.forEach((li, index) => {
+                var div2 = document.createElement("div")
+                var input = document.createElement("input")
+                var label = document.createElement("label")
+                var i = document.createElement("i")
+                input.type = "radio"
+                input.name = el.no
+                input.value = li
+                label.innerHTML = li
+                label.className = "ms-2"
+                i.className = "d-none"
+                i.classList.add('d-none', 'lh-1', 'bi')
+                div2.classList.add("d-flex", "align-items-center", "ms-4")
+                div2.appendChild(input)
+                div2.appendChild(label)
+                div2.appendChild(i)
+                div.appendChild(div2)
+            })
+
+            document.getElementById("form").appendChild(div)
+
+        });
+        var footerDiv = document.createElement("div")
+        footerDiv.classList.add('d-flex', 'justify-content-end', 'mt-3', 'gap-3')
+        var submitAns = document.createElement("button")
+        submitAns.innerHTML = "Submit"
+        submitAns.classList.add("btn", "btn-primary")
+        footerDiv.appendChild(submitAns)
+        document.getElementById("form").appendChild(footerDiv)
+
+        function submitform(e) {
+            e.preventDefault()
+            var mydata = new FormData(e.target)
+            for (const k of mydata.keys()) {
+                keys[k] = mydata.getAll(k)
+            }
+         
+            questions.forEach((el, i) => {
+                var inputs = document.getElementsByName(el.no);
+                var questionCheck = document.getElementById(`question${el.no}`)
+                var mark = document.createElement("b")
+                var markDiv = document.getElementsByClassName(`mark${el.no}`);
+                for (let i = 0; i < markDiv.length; i++) {
+                    markDiv[i].classList.remove('d-none');
+                }
+                mark.classList.add('ms-5', `mark${el.no}`, 'fw-bold','float-end')
+
+                inputs.forEach(input => {
+                    var label1 = input.nextElementSibling;
+                    var i1 = label1.nextElementSibling;
+                    if (input.checked) {
+                        if (el.ans == input.value) {
+                            i1.classList.add('bi-check-lg');
+                            i1.classList.remove('bi-x', 'd-none');
+                        } else {
+                            i1.classList.add('bi-x');
+                            i1.classList.remove('bi-check-lg', 'd-none');
+                        }
+                    }
+                    if (el.ans == input.value && !(input.checked)) {
+                        // markDiv.innerHTML = "0/1 Marks"
+                        i1.classList.add('bi-check-lg');
+                        i1.classList.remove('bi-x', 'd-none');
+                    }
+                });
+                if (el.ans == keys[el.no]) {
+                    marks++
+                    mark.innerHTML = "1/1 Marks"
+                    mark.classList.add('text-success')
+                }
+                else {
+                    mark.innerHTML = "0/1 Marks"
+                    mark.classList.add('text-danger')
+                }
+                questionCheck.appendChild(mark)
+            })
+            console.log(marks);
+            var inputs = document.getElementsByTagName("input");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].disabled = true;
+            }
+            document.getElementById("totalMarks").innerHTML = marks + "/10 Marks"
+        }
+    </script>
+</body>
+
+</html>
