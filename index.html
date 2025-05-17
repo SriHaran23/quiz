@@ -24,19 +24,32 @@
             font-size: 35px;
             line-height: normal;
         }
+
+        .mainDiv {
+            width: 50%;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.308);
+            border-radius: 8px;
+        }
+
+        @media (max-width:792px) {
+            .mainDiv {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="d-flex justify-content-center">
-        <div class="w-50 border m-4">
-            <div class="bg-primary text-light fw-bolder p-3 d-flex justify-content-between align-items-center">
-                <h1>Quiz on Events</h1>
-                <h4 id="totalMarks"></h4>
+        <div class="mainDiv border m-4">
+            <div class="bg-primary text-light p-3 d-flex justify-content-between align-items-center rounded-1">
+                <h1 class="fw-bolder">Quiz on Events</h1>
+                <h4 class="fw-bolder" id="totalMarks"></h4>
             </div>
-            <form id="form" onsubmit="submitform(event)" class="p-5 pt-2">
+            <form id="form" onsubmit="submitform(event)" class="p-3 p-md-5 pt-2">
 
-                
+
             </form>
         </div>
     </div>
@@ -88,6 +101,7 @@
         footerDiv.classList.add('d-flex', 'justify-content-end', 'mt-3', 'gap-3')
         var submitAns = document.createElement("button")
         submitAns.innerHTML = "Submit"
+        submitAns.id = "Submit"
         submitAns.classList.add("btn", "btn-primary")
         footerDiv.appendChild(submitAns)
         document.getElementById("form").appendChild(footerDiv)
@@ -98,7 +112,8 @@
             for (const k of mydata.keys()) {
                 keys[k] = mydata.getAll(k)
             }
-         
+            document.getElementById('Submit').disabled=true
+
             questions.forEach((el, i) => {
                 var inputs = document.getElementsByName(el.no);
                 var questionCheck = document.getElementById(`question${el.no}`)
@@ -107,7 +122,7 @@
                 for (let i = 0; i < markDiv.length; i++) {
                     markDiv[i].classList.remove('d-none');
                 }
-                mark.classList.add('ms-5', `mark${el.no}`, 'fw-bold','float-end')
+                mark.classList.add('me-3', `mark${el.no}`, 'fw-bold', 'float-end')
 
                 inputs.forEach(input => {
                     var label1 = input.nextElementSibling;
